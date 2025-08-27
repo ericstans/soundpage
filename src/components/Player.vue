@@ -13,7 +13,7 @@
       </button>
       <h3>{{ song }}</h3>
     </div>
-  <audio ref="audio" :src="import.meta.env.BASE_URL + 'mp3s/' + song" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
+  <audio ref="audio" :src="audioSrc" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
     <Waveform :audio="audio" :progress="progress" />
   </div>
   </div>
@@ -28,6 +28,7 @@ const playerBus = window.__playerBus = window.__playerBus || new EventTarget();
 
 const props = defineProps({ song: String });
 const coverSrc = ref(getCoverSrc(props.song));
+const audioSrc = computed(() => import.meta.env.BASE_URL + 'mp3s/' + props.song);
 function getCoverSrc(song) {
   // Remove extension and replace with .png
   const base = song.replace(/\.[^/.]+$/, '');
@@ -36,6 +37,7 @@ function getCoverSrc(song) {
 function handleImgError(e) {
   e.target.src = import.meta.env.BASE_URL + 'images/default.png';
 }
+import { computed } from 'vue';
 const audio = ref(null);
 const isPlaying = ref(false);
 const progress = ref(0);
