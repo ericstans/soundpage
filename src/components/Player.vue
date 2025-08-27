@@ -26,7 +26,8 @@ import Waveform from './Waveform.vue';
 // Simple event bus for play control
 const playerBus = window.__playerBus = window.__playerBus || new EventTarget();
 
-const props = defineProps({ song: String });
+const props = defineProps({ song: String, index: Number });
+const emit = defineEmits(['play-next']);
 const coverSrc = ref(getCoverSrc(props.song));
 const audioSrc = computed(() => import.meta.env.BASE_URL + 'mp3s/' + props.song);
 function getCoverSrc(song) {
@@ -61,6 +62,7 @@ function onTimeUpdate() {
 function onEnded() {
   isPlaying.value = false;
   progress.value = 0;
+  emit('play-next', props.index);
 }
 
 function onPlay() {
@@ -80,8 +82,18 @@ function handlePauseAll(e) {
   }
 }
 
+function handlePlaySongAtIndex(e) {
+  if (e.detail === props.index && audio.value) {
+    audio.value.play();
+  }
+}
 onMounted(() => {
   playerBus.addEventListener('pauseAll', handlePauseAll);
+  playerBus.addEventListener('playSongAtIndex', handlePlaySongAtIndex);
+});
+onBeforeUnmount(() => {
+  playerBus.removeEventListener('pauseAll', handlePauseAll);
+  playerBus.removeEventListener('playSongAtIndex', handlePlaySongAtIndex);
 });
 onBeforeUnmount(() => {
   playerBus.removeEventListener('pauseAll', handlePauseAll);
