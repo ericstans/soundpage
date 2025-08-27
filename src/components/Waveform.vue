@@ -40,8 +40,12 @@ function drawWaveform() {
   grad.addColorStop(1, 'rgba(255, 140, 0, 0.1)');
   for (let i = 0; i < waveform.value.length; i++) {
     const x = i * (barWidth + gap);
-    const y = (1 - waveform.value[i]) * (canvas.value.height / 2);
-    const yMirror = (1 + waveform.value[i]) * (canvas.value.height / 2);
+  const y = (1 - waveform.value[i]) * (canvas.value.height / 2);
+  // Reflection is only 20% of the height, with a visible gap below center
+  const reflectionHeight = canvas.value.height * 0.2;
+  const reflectionGap = 3; // px gap between main and reflection
+  const reflectionBase = canvas.value.height / 2 + reflectionGap;
+  const yMirror = reflectionBase + (waveform.value[i]) * reflectionHeight;
     // Top bar
     ctx.beginPath();
     ctx.moveTo(x, canvas.value.height / 2);
@@ -63,27 +67,28 @@ function drawWaveform() {
       ctx.fillRect(x, 0, Math.min(barWidth, progressBar - x), canvas.value.height / 2);
       ctx.restore();
     }
-    // Bottom (mirrored) bar
+    // Bottom (mirrored) bar (reflection)
+    ctx.save();
+    ctx.strokeStyle = '#444'; // much darker stroke
     ctx.beginPath();
-    ctx.moveTo(x, canvas.value.height / 2);
+    ctx.moveTo(x, reflectionBase);
     ctx.lineTo(x, yMirror);
     ctx.lineTo(x + barWidth, yMirror);
-    ctx.lineTo(x + barWidth, canvas.value.height / 2);
+    ctx.lineTo(x + barWidth, reflectionBase);
     ctx.closePath();
     ctx.stroke();
     if (x < progressBar) {
-      ctx.save();
       ctx.beginPath();
-      ctx.moveTo(x, canvas.value.height / 2);
+      ctx.moveTo(x, reflectionBase);
       ctx.lineTo(x, yMirror);
       ctx.lineTo(x + barWidth, yMirror);
-      ctx.lineTo(x + barWidth, canvas.value.height / 2);
+      ctx.lineTo(x + barWidth, reflectionBase);
       ctx.closePath();
       ctx.clip();
-      ctx.fillStyle = grad;
-      ctx.fillRect(x, canvas.value.height / 2, Math.min(barWidth, progressBar - x), canvas.value.height / 2);
-      ctx.restore();
+      ctx.fillStyle = 'rgba(30,30,30,0.85)'; // much darker fill
+      ctx.fillRect(x, reflectionBase, Math.min(barWidth, progressBar - x), reflectionHeight);
     }
+    ctx.restore();
   }
 }
 </script>
