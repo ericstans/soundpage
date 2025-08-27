@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'https://ericstans.github.com/soundpage/',
+  base: 'https://ericstans.github.io/soundpage/',
   plugins: [
     vue(),
     vueDevTools(),
