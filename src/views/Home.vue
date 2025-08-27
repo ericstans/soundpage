@@ -2,8 +2,9 @@
   <div>
     <Player 
       v-for="(song, idx) in songs" 
-      :key="song" 
-      :song="song" 
+      :key="song.file || song" 
+      :song="song.file || song" 
+      :waveform="song.waveform" 
       :index="idx" 
       @play-next="handlePlayNext"
     />
@@ -17,7 +18,14 @@ import Player from '../components/Player.vue';
 const songs = ref([]);
 onMounted(async () => {
   const res = await fetch(import.meta.env.BASE_URL + 'mp3s/index.json');
-  songs.value = await res.json();
+  const data = await res.json();
+  // If index.json is an array of {file, waveform}, use as-is; else fallback to old format
+  if (Array.isArray(data) && data.length && data[0].file && data[0].waveform) {
+    songs.value = data;
+  } else {
+    // fallback: old format, just filenames
+    songs.value = data.map(f => ({ file: f, waveform: null }));
+  }
 });
 
 function handlePlayNext(currentIdx) {

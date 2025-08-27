@@ -14,7 +14,7 @@
       <h3>{{ song }}</h3>
     </div>
   <audio ref="audio" :src="audioSrc" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
-    <Waveform :audio="audio" :progress="progress" />
+  <Waveform :audio="audio" :progress="progress" :waveform="props.waveform" />
   </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ import Waveform from './Waveform.vue';
 // Simple event bus for play control
 const playerBus = window.__playerBus = window.__playerBus || new EventTarget();
 
-const props = defineProps({ song: String, index: Number });
+const props = defineProps({ song: String, index: Number, waveform: Array });
 const emit = defineEmits(['play-next']);
 const coverSrc = ref(getCoverSrc(props.song));
 const audioSrc = computed(() => import.meta.env.BASE_URL + 'mp3s/' + props.song);

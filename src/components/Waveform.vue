@@ -6,16 +6,21 @@
 import { ref, watch, onMounted } from 'vue';
 import { getWaveformData } from '../utils/waveform';
 
+
 const props = defineProps({
   audio: Object,
-  progress: Number
+  progress: Number,
+  waveform: Array
 });
 
 const canvas = ref(null);
-const waveform = ref([]);
+const waveform = ref(props.waveform || []);
 
 watch(() => props.audio, async (audio) => {
-  if (audio && audio.src) {
+  if (props.waveform && props.waveform.length) {
+    waveform.value = props.waveform;
+    drawWaveform();
+  } else if (audio && audio.src) {
     waveform.value = await getWaveformData(audio.src);
     drawWaveform();
   }
