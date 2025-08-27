@@ -13,7 +13,7 @@
       </button>
       <h3>{{ song }}</h3>
     </div>
-    <audio ref="audio" :src="`/mp3s/${song}`" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
+  <audio ref="audio" :src="import.meta.env.BASE_URL + 'mp3s/' + song" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
     <Waveform :audio="audio" :progress="progress" />
   </div>
   </div>
@@ -31,10 +31,10 @@ const coverSrc = ref(getCoverSrc(props.song));
 function getCoverSrc(song) {
   // Remove extension and replace with .png
   const base = song.replace(/\.[^/.]+$/, '');
-  return `/images/${base}.png`;
+  return import.meta.env.BASE_URL + `images/${base}.png`;
 }
 function handleImgError(e) {
-  e.target.src = '/images/default.png';
+  e.target.src = import.meta.env.BASE_URL + 'images/default.png';
 }
 const audio = ref(null);
 const isPlaying = ref(false);
