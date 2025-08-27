@@ -101,6 +101,8 @@ watch(() => props.song, () => {
   align-items: stretch;
   gap: 1.2em;
   margin: 1em 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 .cover {
   height: 100%;
@@ -114,7 +116,11 @@ watch(() => props.song, () => {
   max-width: 180px;
 }
 .player {
-  margin: 1em 0;
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 .player-header {
   display: flex;
