@@ -5,7 +5,7 @@ const SAMPLES = 150;
 export async function getWaveformData(url) {
   return new Promise((resolve) => {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  fetch(import.meta.env.BASE_URL + url.replace(/^\//, ''))
+  fetch(url)
       .then(res => res.arrayBuffer())
       .then(arrayBuffer => audioCtx.decodeAudioData(arrayBuffer))
       .then(audioBuffer => {
