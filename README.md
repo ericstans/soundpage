@@ -1,6 +1,6 @@
-# soundcloud-clone
+# soundpage
 
-This template should help get you started developing with Vue 3 in Vite.
+A simple static site in Vue for sharing your music.
 
 ## Recommended IDE Setup
 
@@ -14,6 +14,15 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 
 ```sh
 npm install
+```
+
+### Generate mp3 index
+Put mp3s in `public/images` and images in `public/mp3s`
+
+### Generate mp3 index
+
+```sh
+node /scripts/generateMp3Index.cjs
 ```
 
 ### Compile and Hot-Reload for Development
