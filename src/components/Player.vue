@@ -14,12 +14,13 @@
       <h3>{{ song }}</h3>
     </div>
   <audio ref="audio" :src="audioSrc" @timeupdate="onTimeUpdate" @ended="onEnded" @play="onPlay" @pause="onPause"></audio>
-  <Waveform :audio="audio" :progress="progress" :waveform="props.waveform" />
+  <Waveform :audio="audio" :progress="progress" :waveform="props.waveform" :on-canvas-click="onCanvasClick" />
   </div>
   </div>
 </template>
 
 <script setup>
+import '@/assets/main.css';
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import Waveform from './Waveform.vue';
 
@@ -107,66 +108,10 @@ watch(() => props.song, () => {
     isPlaying.value = false;
   }
 });
+// Seek handler to be passed to Waveform
+function onCanvasClick(percent) {
+  if (!audio.value || !audio.value.duration || !isFinite(audio.value.duration)) return;
+  if (audio.value.paused) return; // Ignore clicks if not playing
+  audio.value.currentTime = percent * audio.value.duration;
+}
 </script>
-
-<style scoped>
-.player-container {
-  display: flex;
-  align-items: stretch;
-  gap: 1.2em;
-  margin: 1em 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-.cover {
-  height: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border-radius: 8px;
-  background: #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  align-self: stretch;
-  min-width: 64px;
-  max-width: 180px;
-}
-.player {
-  flex: 1 1 0%;
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.player-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75em;
-}
-.play-btn {
-  width: 2.5em;
-  height: 2.5em;
-  border: none;
-  border-radius: 50%;
-  background: #ff8c00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.2s;
-  margin-right: 0.5em;
-}
-.play-btn:hover {
-  background: #ffa733;
-}
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-h3 {
-  margin: 0;
-  font-size: 1.1em;
-  font-weight: 500;
-  word-break: break-all;
-}
-</style>

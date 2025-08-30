@@ -1,5 +1,5 @@
 <template>
-  <canvas ref="canvas" width="600" height="100"></canvas>
+  <canvas ref="canvas" width="600" height="100" @click="handleCanvasClick"></canvas>
 </template>
 
 <script setup>
@@ -10,8 +10,16 @@ import { getWaveformData } from '../utils/waveform';
 const props = defineProps({
   audio: Object,
   progress: Number,
-  waveform: Array
+  waveform: Array,
+  onCanvasClick: Function
 });
+function handleCanvasClick(event) {
+  if (!props.onCanvasClick) return;
+  const rect = canvas.value.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const percent = x / rect.width;
+  props.onCanvasClick(percent);
+}
 
 const canvas = ref(null);
 const waveform = ref(props.waveform || []);
